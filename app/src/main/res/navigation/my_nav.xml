@@ -16,9 +16,9 @@
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.example.snoskred.fragments.MapFragment"
+        android:name="com.example.snoskred.fragments.MapsFragment"
         android:label="fragment_map"
-        tools:layout="@layout/fragment_map" >
+        tools:layout="@layout/fragment_maps" >
         <action
             android:id="@+id/action_mapFragment_to_statFragment"
             app:destination="@id/statFragment" />

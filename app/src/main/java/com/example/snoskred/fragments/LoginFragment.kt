@@ -1,10 +1,13 @@
 package com.example.snoskred.fragments
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.example.snoskred.R
 
 // TODO: Rename parameter arguments, choose names that match
@@ -27,6 +30,7 @@ class LoginFragment : Fragment() {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+
         }
     }
 
@@ -35,7 +39,18 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
+        //TODO: this handler needs to be removed when the login is successful
+        Handler(Looper.myLooper()!!).postDelayed({
+
+            findNavController().navigate(R.id.action_loginFragment_to_mapFragment)
+
+        }, 1000)
+
         return inflater.inflate(R.layout.fragment_login, container, false)
+        // create onclick for the textview to navigate to next fragment
+
+
     }
 
     companion object {
