@@ -1,21 +1,36 @@
 package com.example.snoskred.fragments
 
-import androidx.fragment.app.Fragment
-
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.snoskred.R
+import androidx.core.content.ContextCompat
+import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
 
+import androidx.fragment.app.Fragment
+import com.example.snoskred.R
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import java.util.jar.Manifest
 
-class MapsFragment : Fragment() {
+class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
+    GoogleMap.OnMyLocationButtonClickListener,
+    GoogleMap.OnMyLocationClickListener,
+    OnRequestPermissionsResultCallback {
+
+    private var permissionDenied = false
+    private lateinit var mMap: GoogleMap
+
+
 
     private val callback = OnMapReadyCallback { googleMap ->
         /**
@@ -27,9 +42,10 @@ class MapsFragment : Fragment() {
          * install it inside the SupportMapFragment. This method will only be triggered once the
          * user has installed Google Play services and returned to the app.
          */
-        val sydney = LatLng(-34.0, 151.0)
-        googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        val myPlace = LatLng(68.43, 17.42)
+        googleMap.addMarker(MarkerOptions().position(myPlace).title("Marker in Narvik"))
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPlace, 12f))
+
     }
 
     override fun onCreateView(
@@ -45,4 +61,51 @@ class MapsFragment : Fragment() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
     }
+
+    override fun onMapReady(p0: GoogleMap) {
+        mMap.uiSettings.isZoomControlsEnabled = true
+        mMap.setOnMarkerClickListener(this)
+        mMap.setOnMyLocationButtonClickListener(this)
+        mMap.setOnMyLocationClickListener(this)
+        enableMyLocation()
+
+
+    }
+
+    override fun onMarkerClick(p0: Marker): Boolean = false
+
+
+    @SuppressLint("MissingPermission")
+    private fun enAbleMyLocation() {
+        if (Context.checkSelfPermission(
+                this,
+                Manifest.permision.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permision.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            mMap.isMyLocationEnabled = true
+            return
+        }
+    }
+
+
+    override fun onMyLocationButtonClick(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun onMyLocationClick(p0: Location) {
+        TODO("Not yet implemented")
+    }
+
+
 }
+
+
+
+
+
+
+
+
