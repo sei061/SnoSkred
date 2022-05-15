@@ -1,17 +1,16 @@
 package com.example.snoskred.fragments
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
-
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import com.example.snoskred.R
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -20,9 +19,8 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import java.util.jar.Manifest
 
-class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
+ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
     GoogleMap.OnMyLocationButtonClickListener,
     GoogleMap.OnMyLocationClickListener,
     OnRequestPermissionsResultCallback {
@@ -31,17 +29,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private lateinit var mMap: GoogleMap
 
 
-
     private val callback = OnMapReadyCallback { googleMap ->
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
         val myPlace = LatLng(68.43, 17.42)
         googleMap.addMarker(MarkerOptions().position(myPlace).title("Marker in Narvik"))
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPlace, 12f))
@@ -76,32 +64,43 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
 
     @SuppressLint("MissingPermission")
-    private fun enAbleMyLocation() {
-        if (Context.checkSelfPermission(
-                this,
-                Manifest.permision.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permision.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            mMap.isMyLocationEnabled = true
-            return
+    private fun enableMyLocation() = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "Beklager, du har valgt å ikke dele din posisjon",
+                Toast.LENGTH_SHORT
+            ).show()
+            view?.findNavController()?.navigate(R.id.action_mapFragment_to_loginFragment)
+            permissionDenied = true
         }
     }
 
-
     override fun onMyLocationButtonClick(): Boolean {
-        TODO("Not yet implemented")
+        Toast.makeText(requireContext(), "MyLocation button clicked", Toast.LENGTH_SHORT)
+            .show()
+        return false
     }
 
     override fun onMyLocationClick(p0: Location) {
-        TODO("Not yet implemented")
+        Toast.makeText(requireContext(), "Current location:\n$p0", Toast.LENGTH_LONG)
+            .show()
     }
 
 
-}
 
+
+
+
+
+
+
+
+
+}
 
 
 
