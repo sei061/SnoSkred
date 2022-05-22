@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.snoskred.R
 import com.example.snoskred.SnoskredModelFactory
@@ -30,6 +31,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class MapsFragment : Fragment(), OnMapReadyCallback{
@@ -44,6 +47,20 @@ class MapsFragment : Fragment(), OnMapReadyCallback{
     private val pERMISSION_ID = 42
 
     var currentLocation: LatLng = LatLng(0.0, 0.0)
+
+    fun getCurrentDate(): String {
+        val current = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        return current.format(formatter)
+    }
+
+    fun getCurrentDatePlusOneDay(): String {
+        val currentPlusOne = LocalDateTime.now().plusDays(1)
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        return currentPlusOne.format(formatter)
+    }
+
+
 
 /*
     private val callback = OnMapReadyCallback { googleMap ->
@@ -63,15 +80,15 @@ class MapsFragment : Fragment(), OnMapReadyCallback{
         ) { permissions ->
             when {
                 permissions.getOrDefault(
-                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
                     false
                 ) -> {
                 }
                 permissions.getOrDefault(
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
                     false
                 ) -> {
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                    Manifest.permission.ACCESS_COARSE_LOCATION
                     Log.d("Location", "COARSE LOCATION GRANTED")
                 }
                 else -> {
@@ -88,7 +105,14 @@ class MapsFragment : Fragment(), OnMapReadyCallback{
         )
         val repository = Repository()
         val viewModelFactory = SnoskredModelFactory(repository)
-       // viewModel = SnoskredViewModel()
+        viewModel = ViewModelProvider(this, viewModelFactory)[SnoskredViewModel::class.java]
+        viewModel.getPost(currentLocation.latitude, currentLocation.longitude, 1)
+        viewModel.myResponse.observe(viewLifecycleOwner) { response ->
+            if (response != null) {
+                Log.d("MapsFragment", "Response: ${response}")
+                Log.d("MapsFragment", "Response: ${response.body()?.get(0)?.RegionId}")
+            }
+        }
 
 
 
@@ -105,7 +129,15 @@ class MapsFragment : Fragment(), OnMapReadyCallback{
         mapFragment?.getMapAsync(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         binding.currentLoc.setOnClickListener {
-            //   getLastLocation()
+            getLastLocation()
+            viewModel.getPost(currentLocation.latitude, currentLocation.longitude, 1)
+            viewModel.myResponse.observe(viewLifecycleOwner) { response ->
+                if (response != null) {
+                    Log.d("MapsFragment", "Response: ${response}")
+                    Log.d("MapsFragment", "Response: ${response.body()?.get(0)?.RegionId}")
+                }
+            }
+
         }
 
     }

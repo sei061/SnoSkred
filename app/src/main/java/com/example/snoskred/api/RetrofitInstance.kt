@@ -7,6 +7,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 object RetrofitInstance {
 
+
+
     private val retrofit by lazy  {
         Retrofit.Builder()
             .baseUrl(BASE_URL)

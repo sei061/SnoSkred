@@ -6,14 +6,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.snoskred.model.Post
 import com.example.snoskred.repository.Repository
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 class SnoskredViewModel(private val repository: Repository): ViewModel(){
 
-    val myResponse: MutableLiveData<Post> = MutableLiveData()
+    val myResponse: MutableLiveData <Response<List<Post>>> = MutableLiveData()
 
-    fun getPost(){
+    fun getPost(lat:Double, lng:Double,
+                Språknøkkel:Int){
         viewModelScope.launch {
-            val response: Post = repository.getPost()
+            val response: Response <List<Post>> = repository.getPost(lat, lng, Språknøkkel)
             myResponse.value = response
         }
     }
