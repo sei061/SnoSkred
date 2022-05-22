@@ -1,5 +1,4 @@
 package com.example.snoskred.fragments
-
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context.LOCATION_SERVICE
@@ -20,7 +19,10 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.snoskred.R
+import com.example.snoskred.SnoskredModelFactory
+import com.example.snoskred.SnoskredViewModel
 import com.example.snoskred.databinding.FragmentMapsBinding
+import com.example.snoskred.repository.Repository
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -32,24 +34,25 @@ import com.google.android.gms.maps.model.MarkerOptions
 
 class MapsFragment : Fragment(), OnMapReadyCallback{
 
+    private lateinit var viewModel: SnoskredViewModel
+
     private var _binding: FragmentMapsBinding? = null
     private val binding get() = _binding!!
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var permissionDenied = false
+    //private var permissionDenied = false
     private lateinit var mMap: GoogleMap
     private val pERMISSION_ID = 42
 
     var currentLocation: LatLng = LatLng(0.0, 0.0)
 
-
+/*
     private val callback = OnMapReadyCallback { googleMap ->
         val myPlace = LatLng(68.43, 17.42)
         googleMap.addMarker(MarkerOptions().position(myPlace).title("Marker in Narvik"))
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPlace, 12f))
 
     }
-
-
+*/
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -83,11 +86,17 @@ class MapsFragment : Fragment(), OnMapReadyCallback{
                 Manifest.permission.ACCESS_COARSE_LOCATION
             )
         )
+        val repository = Repository()
+        val viewModelFactory = SnoskredModelFactory(repository)
+       // viewModel = SnoskredViewModel()
+
+
 
         _binding = FragmentMapsBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -211,6 +220,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback{
         mMap = p0
         getLastLocation()
 
+        
         //GET LAT LON
         p0.setOnMapClickListener { point ->
             val lat = point.latitude.toString()

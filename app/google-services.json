@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "932081676069",
+    "project_id": "snoskred",
+    "storage_bucket": "snoskred.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932081676069:android:af8c2d0d64fdccf9e9f4cc",
+        "android_client_info": {
+          "package_name": "com.example.snoskred"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "932081676069-kr5dmhhscc3gpb4hdtp04ri2emkuv4vs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFMZoAp67OF4R7AFwNHr8U_4HHDxTluTc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "932081676069-kr5dmhhscc3gpb4hdtp04ri2emkuv4vs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
