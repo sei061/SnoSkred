@@ -263,22 +263,21 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                     response.body()?.let {
                         for (post in it) {
                             val region = post.RegionId
-                            val dangerlevel = post.DangerLevel
+                            val dangerLevel = post.DangerLevel
+                            var color : Float = 0F
+                            when (dangerLevel) {
+                                0 -> color = BitmapDescriptorFactory.HUE_GREEN
+                                2 -> color = BitmapDescriptorFactory.HUE_YELLOW
+                                4 -> color = BitmapDescriptorFactory.HUE_RED
+                            }
+                            var icon = BitmapDescriptorFactory.defaultMarker(color)
                             if (region === 3015)
                                 mMap.addMarker(
                                     MarkerOptions()
                                         .position(ofoten)
                                         .title("Ofoten")
                                         .snippet(response.body()?.get(0)?.MainText)
-                                        //.icon(defaultMarkerGreen(dangerlevel <= 2))
-                                        .icon(defaultMarkerYellow(dangerlevel in 2..4)))
-                                        //.icon(defaultMarkerRed(dangerlevel >= 4)))
-
-
-
-
-
-
+                                        .icon(icon))
 
                         }
                     }
@@ -286,26 +285,4 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             }
         }
     }
-
-
-    private fun defaultMarkerGreen(b: Boolean): BitmapDescriptor? {
-        return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
-    }
-
-    private fun defaultMarkerRed(b: Boolean): BitmapDescriptor? {
-        return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
-    }
-
-    private fun defaultMarkerYellow(b: Boolean): BitmapDescriptor? {
-        return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)
-    }
-
-
-
 }
-
-
-
-
-
-
