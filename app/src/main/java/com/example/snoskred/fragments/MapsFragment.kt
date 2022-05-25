@@ -50,7 +50,21 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private val pERMISSION_ID = 42
 
     var currentLocation: LatLng = LatLng(0.0, 0.0)
-    private val ofoten = LatLng(68.18, 17.45)
+    private val ofoten = LatLng(68.452, 17.458)
+    private val nordenSkiold = LatLng(77.8666, 15.3166)
+    private val finnmarksKyst = LatLng(70.2673, 21.6014)
+    private val vestFinnmark = LatLng(70.000, 25.000)
+    private val nordTroms = LatLng(69.3333, 17.4999)
+    private val lyngsAlp = LatLng(69.7903, 20.1695)
+    private val tromsø = LatLng(69.6492, 18.9553)
+    private val sørTroms = LatLng(68.747, 17.8055)
+    private val indreTroms = LatLng(68.8605, 18.3505)
+    private val lofotVesterål = LatLng(68.6908, 15.4078)
+    private val salten = LatLng(67.259184, 15.391632)
+    private val svartisen = LatLng(66.6333308, 14.0000)
+    private val helgeland = LatLng(66.03499986, 12.70499718)
+
+
 
     fun getCurrentDate(): String {
         val current = LocalDateTime.now()
@@ -278,6 +292,77 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                                         .title("Ofoten")
                                         .snippet(response.body()?.get(0)?.MainText)
                                         .icon(icon))
+                            if (region === 3003)
+                                mMap.addMarker(
+                                    MarkerOptions()
+                                        .position(nordenSkiold)
+                                        .title("Nordenskiöld Land")
+                                        .snippet(response.body()?.get(0)?.MainText)
+                                        .icon(icon))
+                            if (region === 3006)
+                                mMap.addMarker(
+                                    MarkerOptions()
+                                        .position(finnmarksKyst)
+                                        .title("Finnmarkskysten")
+                                        .snippet(response.body()?.get(0)?.MainText)
+                                        .icon(icon))
+                            if (region === 3007)
+                                mMap.addMarker(
+                                    MarkerOptions()
+                                        .position(vestFinnmark)
+                                        .title("Vest-Finnmark")
+                                        .snippet(response.body()?.get(0)?.MainText)
+                                        .icon(icon))
+                            if (region === 3009)
+                                mMap.addMarker(
+                                    MarkerOptions()
+                                        .position(nordTroms)
+                                        .title("Nord-Troms")
+                                        .snippet(response.body()?.get(0)?.MainText)
+                                        .icon(icon))
+                            if (region === 3010)
+                                mMap.addMarker(
+                                    MarkerOptions()
+                                        .position(lyngsAlp)
+                                        .title("Lyngen")
+                                        .snippet(response.body()?.get(0)?.MainText)
+                                        .icon(icon))
+                            if (region === 3011)
+                                mMap.addMarker(
+                                    MarkerOptions()
+                                        .position(tromsø)
+                                        .title("Tromsø")
+                                        .snippet(response.body()?.get(0)?.MainText)
+                                        .icon(icon))
+                            if (region === 3012)
+                                mMap.addMarker(
+                                    MarkerOptions()
+                                        .position(sørTroms)
+                                        .title("Sør-Troms")
+                                        .snippet(response.body()?.get(0)?.MainText)
+                                        .icon(icon))
+                            if (region === 3013)
+                                mMap.addMarker(
+                                    MarkerOptions()
+                                        .position(indreTroms)
+                                        .title("Indre-Troms")
+                                        .snippet(response.body()?.get(0)?.MainText)
+                                        .icon(icon))
+                            if (region === 3014)
+                                mMap.addMarker(
+                                    MarkerOptions()
+                                        .position(lofotVesterål)
+                                        .title("Lofoten og Vesterålen")
+                                        .snippet(response.body()?.get(0)?.MainText)
+                                        .icon(icon))
+                            if (region === 3016)
+                                mMap.addMarker(
+                                    MarkerOptions()
+                                        .position(salten)
+                                        .title("Salten")
+                                        .snippet(response.body()?.get(0)?.MainText)
+                                        .icon(icon))
+
 
                         }
                     }
