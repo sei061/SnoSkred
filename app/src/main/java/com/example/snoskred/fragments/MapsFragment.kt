@@ -18,7 +18,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import com.example.snoskred.R
 import com.example.snoskred.SnoskredModelFactory
 import com.example.snoskred.SnoskredViewModel
@@ -29,24 +28,29 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import retrofit2.Response
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
-class MapsFragment : Fragment(), OnMapReadyCallback{
+class MapsFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var viewModel: SnoskredViewModel
 
     private var _binding: FragmentMapsBinding? = null
     private val binding get() = _binding!!
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     //private var permissionDenied = false
     private lateinit var mMap: GoogleMap
     private val pERMISSION_ID = 42
 
     var currentLocation: LatLng = LatLng(0.0, 0.0)
+    private val ofoten = LatLng(68.18, 17.45)
 
     fun getCurrentDate(): String {
         val current = LocalDateTime.now()
@@ -61,8 +65,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback{
     }
 
 
-
-/*
+    /*
     private val callback = OnMapReadyCallback { googleMap ->
         val myPlace = LatLng(68.43, 17.42)
         googleMap.addMarker(MarkerOptions().position(myPlace).title("Marker in Narvik"))
@@ -103,18 +106,12 @@ class MapsFragment : Fragment(), OnMapReadyCallback{
                 Manifest.permission.ACCESS_COARSE_LOCATION
             )
         )
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        getLastLocation()
+
         val repository = Repository()
         val viewModelFactory = SnoskredModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[SnoskredViewModel::class.java]
-        viewModel.getPost(currentLocation.latitude, currentLocation.longitude, 1)
-        viewModel.myResponse.observe(viewLifecycleOwner) { response ->
-            if (response != null) {
-                Log.d("MapsFragment", "Response: ${response}")
-                Log.d("MapsFragment", "Response: ${response.body()?.get(0)?.RegionId}")
-            }
-        }
-
-
 
         _binding = FragmentMapsBinding.inflate(inflater, container, false)
         val view = binding.root
@@ -124,21 +121,31 @@ class MapsFragment : Fragment(), OnMapReadyCallback{
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mapFragment =
-            childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         binding.currentLoc.setOnClickListener {
-            getLastLocation()
             viewModel.getPost(currentLocation.latitude, currentLocation.longitude, 1)
             viewModel.myResponse.observe(viewLifecycleOwner) { response ->
                 if (response != null) {
-                    Log.d("MapsFragment", "Response: ${response}")
+                    Log.d("MapsFragment", "Response: ${response.body()}")
                     Log.d("MapsFragment", "Response: ${response.body()?.get(0)?.RegionId}")
                 }
             }
-
         }
+        getLastLocation()
+        val repository = Repository()
+        val viewModelFactory = SnoskredModelFactory(repository)
+        viewModel = ViewModelProvider(this, viewModelFactory)[SnoskredViewModel::class.java]
+        viewModel.getPost(currentLocation.latitude, currentLocation.longitude, 1)
+        viewModel.myResponse.observe(viewLifecycleOwner) { response ->
+            if (response != null) {
+                Log.d("MapsFragment", "Response: ${response.body()}")
+                Log.d("MapsFragment", "Response: ${response.body()?.get(0)?.RegionId}")
+            }
+        }
+        val mapFragment =
+            childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        mapFragment?.getMapAsync(this)
+
 
     }
 
@@ -250,21 +257,55 @@ class MapsFragment : Fragment(), OnMapReadyCallback{
 
     override fun onMapReady(p0: GoogleMap) {
         mMap = p0
-        getLastLocation()
+        viewModel.myResponse.observe(viewLifecycleOwner) { response ->
+            when (response.isSuccessful) {
+                true -> {
+                    response.body()?.let {
+                        for (post in it) {
+                            val region = post.RegionId
+                            val dangerlevel = post.DangerLevel
+                            if (region === 3015)
+                                mMap.addMarker(
+                                    MarkerOptions()
+                                        .position(ofoten)
+                                        .title("Ofoten")
+                                        .snippet(response.body()?.get(0)?.MainText)
+                                        //.icon(defaultMarkerGreen(dangerlevel <= 2))
+                                        .icon(defaultMarkerYellow(dangerlevel in 2..4)))
+                                        //.icon(defaultMarkerRed(dangerlevel >= 4)))
 
-        
-        //GET LAT LON
-        p0.setOnMapClickListener { point ->
-            val lat = point.latitude.toString()
-            val lon = point.longitude.toString()
-            val action = MapsFragmentDirections.actionMapFragmentToLoginFragment()
-            view?.findNavController()?.navigate(action)
-            Toast.makeText(
-                context,
-                point.latitude.toString() + ", " + point.longitude,
-                Toast.LENGTH_SHORT
-            ).show()
+
+
+
+
+
+
+                        }
+                    }
+                }
+            }
         }
     }
 
+
+    private fun defaultMarkerGreen(b: Boolean): BitmapDescriptor? {
+        return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
+    }
+
+    private fun defaultMarkerRed(b: Boolean): BitmapDescriptor? {
+        return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
+    }
+
+    private fun defaultMarkerYellow(b: Boolean): BitmapDescriptor? {
+        return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)
+    }
+
+
+
 }
+
+
+
+
+
+

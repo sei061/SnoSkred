@@ -1,6 +1,7 @@
 package com.example.snoskred.model
 
 data class Post (
+
     var RegId: Int,
     var RegionId: Int,
     var RegionName: String,
