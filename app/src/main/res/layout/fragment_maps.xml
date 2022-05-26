@@ -7,27 +7,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-
     <fragment
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragments.MapsFragment" />
+        tools:context=".screen.MapsFragment"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <Button
         android:id="@+id/currentLoc"
-        android:layout_width="30sp"
-        android:layout_height="40sp"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="46dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="16dp"
+        android:backgroundTint="@color/quantum_bluegrey500"
+        app:icon="@drawable/ic_baseline_filter_hdr_24"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginRight="30sp"
-        android:layout_marginBottom="30sp"
-        />
-
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.893" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -82,6 +82,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.1")
 
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.1")
+    // MPAndroidChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
 }
 apply plugin: 'com.google.gms.google-services'  // Google Play services Gradle plugin

@@ -18,6 +18,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.snoskred.R
 import com.example.snoskred.SnoskredModelFactory
 import com.example.snoskred.SnoskredViewModel
@@ -28,16 +30,13 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import retrofit2.Response
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
-class MapsFragment : Fragment(), OnMapReadyCallback {
+class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     private lateinit var viewModel: SnoskredViewModel
 
@@ -65,7 +64,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private val helgeland = LatLng(66.03499986, 12.70499718)
 
 
-
     fun getCurrentDate(): String {
         val current = LocalDateTime.now()
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -77,6 +75,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         return currentPlusOne.format(formatter)
     }
+
+
 
 
     /*
@@ -194,7 +194,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                         currentLocation = LatLng(location.latitude, location.longitude)
                         mMap.clear()
                         mMap.addMarker(MarkerOptions().position(currentLocation))
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 10F))
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 9F))
                     }
                 }
             } else {
@@ -271,6 +271,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(p0: GoogleMap) {
         mMap = p0
+        mMap.setOnInfoWindowClickListener(this)
         viewModel.myResponse.observe(viewLifecycleOwner) { response ->
             when (response.isSuccessful) {
                 true -> {
@@ -278,7 +279,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                         for (post in it) {
                             val region = post.RegionId
                             val dangerLevel = post.DangerLevel
-                            var color : Float = 0F
+                            var color: Float = 0F
                             when (dangerLevel) {
                                 0 -> color = BitmapDescriptorFactory.HUE_GREEN
                                 2 -> color = BitmapDescriptorFactory.HUE_YELLOW
@@ -291,83 +292,102 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                                         .position(ofoten)
                                         .title("Ofoten")
                                         .snippet(response.body()?.get(0)?.MainText)
-                                        .icon(icon))
+                                        .icon(icon)
+                                )
+
                             if (region === 3003)
                                 mMap.addMarker(
                                     MarkerOptions()
                                         .position(nordenSkiold)
                                         .title("Nordenskiöld Land")
                                         .snippet(response.body()?.get(0)?.MainText)
-                                        .icon(icon))
+                                        .icon(icon)
+                                )
                             if (region === 3006)
                                 mMap.addMarker(
                                     MarkerOptions()
                                         .position(finnmarksKyst)
                                         .title("Finnmarkskysten")
                                         .snippet(response.body()?.get(0)?.MainText)
-                                        .icon(icon))
+                                        .icon(icon)
+                                )
                             if (region === 3007)
                                 mMap.addMarker(
                                     MarkerOptions()
                                         .position(vestFinnmark)
                                         .title("Vest-Finnmark")
                                         .snippet(response.body()?.get(0)?.MainText)
-                                        .icon(icon))
+                                        .icon(icon)
+                                )
                             if (region === 3009)
                                 mMap.addMarker(
                                     MarkerOptions()
                                         .position(nordTroms)
                                         .title("Nord-Troms")
                                         .snippet(response.body()?.get(0)?.MainText)
-                                        .icon(icon))
+                                        .icon(icon)
+                                )
                             if (region === 3010)
                                 mMap.addMarker(
                                     MarkerOptions()
                                         .position(lyngsAlp)
                                         .title("Lyngen")
                                         .snippet(response.body()?.get(0)?.MainText)
-                                        .icon(icon))
+                                        .icon(icon)
+                                )
                             if (region === 3011)
                                 mMap.addMarker(
                                     MarkerOptions()
                                         .position(tromsø)
                                         .title("Tromsø")
                                         .snippet(response.body()?.get(0)?.MainText)
-                                        .icon(icon))
+                                        .icon(icon)
+                                )
                             if (region === 3012)
                                 mMap.addMarker(
                                     MarkerOptions()
                                         .position(sørTroms)
                                         .title("Sør-Troms")
                                         .snippet(response.body()?.get(0)?.MainText)
-                                        .icon(icon))
+                                        .icon(icon)
+                                )
                             if (region === 3013)
                                 mMap.addMarker(
                                     MarkerOptions()
                                         .position(indreTroms)
                                         .title("Indre-Troms")
                                         .snippet(response.body()?.get(0)?.MainText)
-                                        .icon(icon))
+                                        .icon(icon)
+                                )
                             if (region === 3014)
                                 mMap.addMarker(
                                     MarkerOptions()
                                         .position(lofotVesterål)
                                         .title("Lofoten og Vesterålen")
                                         .snippet(response.body()?.get(0)?.MainText)
-                                        .icon(icon))
+                                        .icon(icon)
+                                )
                             if (region === 3016)
                                 mMap.addMarker(
                                     MarkerOptions()
                                         .position(salten)
                                         .title("Salten")
                                         .snippet(response.body()?.get(0)?.MainText)
-                                        .icon(icon))
-
-
+                                        .icon(icon)
+                                )
                         }
+
+
                     }
                 }
             }
         }
     }
+
+    override fun onInfoWindowClick(marker: Marker) {
+        val regionNavn = marker.title as String
+        val action = MapsFragmentDirections.actionMapFragmentToStatFragment(regionNavn)
+        view?.findNavController()?.navigate(action)
+    }
+
 }
