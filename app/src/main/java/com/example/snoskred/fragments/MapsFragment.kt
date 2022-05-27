@@ -272,6 +272,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClick
     override fun onMapReady(p0: GoogleMap) {
         mMap = p0
         mMap.setOnInfoWindowClickListener(this)
+
         viewModel.myResponse.observe(viewLifecycleOwner) { response ->
             when (response.isSuccessful) {
                 true -> {

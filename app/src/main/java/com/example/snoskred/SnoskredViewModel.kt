@@ -12,6 +12,7 @@ class SnoskredViewModel(private val repository: Repository): ViewModel(){
 
     val myResponse: MutableLiveData <Response<List<Post>>> = MutableLiveData()
 
+
     fun getPost(lat:Double, lng:Double,
                 Språknøkkel:Int){
         viewModelScope.launch {
