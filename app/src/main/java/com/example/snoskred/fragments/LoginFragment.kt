@@ -1,35 +1,40 @@
 package com.example.snoskred.fragments
 
+import android.app.Activity.RESULT_OK
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.snoskred.R
+import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
+import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+
 
 /**
  * A simple [Fragment] subclass.
  * Use the [LoginFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
+
+
 class LoginFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private var currentUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
 
         }
     }
@@ -38,18 +43,43 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
 
-        //TODO: this handler needs to be removed when the login is successful
-        Handler(Looper.myLooper()!!).postDelayed({
-
-            findNavController().navigate(R.id.action_loginFragment_to_mapFragment)
-
-        }, 1000)
+        signIn()
 
         return inflater.inflate(R.layout.fragment_login, container, false)
-        // create onclick for the textview to navigate to next fragment
 
+    }
+
+    private fun signIn() {
+        val providers = arrayListOf(
+            AuthUI.IdpConfig.GoogleBuilder().build()
+        )
+
+        val signinIntent = AuthUI.getInstance()
+            .createSignInIntentBuilder()
+            .setAvailableProviders(providers)
+            .build()
+
+        signInLauncher.launch(signinIntent)
+    }
+
+    private val signInLauncher = registerForActivityResult(
+        FirebaseAuthUIActivityResultContract()
+        ) {
+            res -> this.signInResult(res)
+        }
+
+
+    private fun signInResult(result: FirebaseAuthUIAuthenticationResult) {
+        val response = result.idpResponse
+        if (result.resultCode == RESULT_OK) {
+            currentUser = FirebaseAuth.getInstance().currentUser
+            findNavController().navigate(R.id.action_loginFragment_to_mapFragment)
+
+
+        } else {
+            Log.e("LoginFragment", "feil under innloging" + response?.error?.errorCode)
+        }
 
     }
 
@@ -67,9 +97,13 @@ class LoginFragment : Fragment() {
         fun newInstance(param1: String, param2: String) =
             LoginFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
                 }
             }
     }
+
+//    private fun signIn() {
+//        val providers = arrayListOf(
+//            AuthUI.IdpConfig.GoogleBuilder().build()
+//        )
+//    }
 }

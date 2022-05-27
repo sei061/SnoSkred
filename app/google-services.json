@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "932081676069",
-    "project_id": "snoskred",
-    "storage_bucket": "snoskred.appspot.com"
+    "project_number": "353088087278",
+    "project_id": "snoskred-48428",
+    "storage_bucket": "snoskred-48428.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:932081676069:android:af8c2d0d64fdccf9e9f4cc",
+        "mobilesdk_app_id": "1:353088087278:android:4b3e9a79373b8f08e3ffff",
         "android_client_info": {
           "package_name": "com.example.snoskred"
         }
       },
       "oauth_client": [
         {
-          "client_id": "932081676069-kr5dmhhscc3gpb4hdtp04ri2emkuv4vs.apps.googleusercontent.com",
+          "client_id": "353088087278-0v0uarf00f88jm1frc74359kq89mooum.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.snoskred",
+            "certificate_hash": "421c41907cb67de0937c42d71ad65086d771e6da"
+          }
+        },
+        {
+          "client_id": "353088087278-q9l08dtc6qh49peeb25gc1e7s4hg9uan.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDFMZoAp67OF4R7AFwNHr8U_4HHDxTluTc"
+          "current_key": "AIzaSyB1GmyeZxmZk1bLlW3sQCvx8z0-iRv-Isk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "932081676069-kr5dmhhscc3gpb4hdtp04ri2emkuv4vs.apps.googleusercontent.com",
+              "client_id": "353088087278-q9l08dtc6qh49peeb25gc1e7s4hg9uan.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
