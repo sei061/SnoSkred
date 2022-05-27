@@ -10,4 +10,11 @@ class Repository {
                         Språknøkkel:Int): Response<List<Post>> {
         return RetrofitInstance.api.getPost(lat, lng, Språknøkkel)
     }
+
+    suspend fun getStatPost(RegionId: Int,
+                        Språknøkkel:Int): Response<List<Post>> {
+        return RetrofitInstance.api.getStatPost(RegionId, Språknøkkel)
+    }
+
+
 }

@@ -6,8 +6,8 @@
     tools:context=".fragments.StatFragment">
 
     <com.github.mikephil.charting.charts.BarChart
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_width="250dp"
         android:id="@+id/barchart" />
 
 

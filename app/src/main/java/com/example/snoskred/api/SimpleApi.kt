@@ -15,5 +15,12 @@ interface SimpleApi {
     ): Response<List<Post>>
 
 
+    @GET("/hydrology/forecast/avalanche/v6.0.1/api/AvalancheWarningByRegion/Simple/{RegionID}/{Spraknokkel}/")
+    suspend fun getStatPost(
+        @Path("RegionID") RegionId: Int,
+        @Path("Spraknokkel") Spraknokkel: Int,
+    ): Response<List<Post>>
+
+
 
 }

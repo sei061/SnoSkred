@@ -162,6 +162,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClick
         mapFragment?.getMapAsync(this)
 
 
+
     }
 
     @SuppressLint("MissingPermission")
@@ -269,10 +270,12 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClick
             }
         }
     }
+    var etnavn = 0
 
     override fun onMapReady(p0: GoogleMap) {
         mMap = p0
         mMap.setOnInfoWindowClickListener(this)
+
 
         viewModel.myResponse.observe(viewLifecycleOwner) { response ->
             when (response.isSuccessful) {
@@ -280,6 +283,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClick
                     response.body()?.let {
                         for (post in it) {
                             val region = post.RegionId
+                            etnavn = region
                             val dangerLevel = post.DangerLevel
                             var color: Float = 0F
                             when (dangerLevel) {
@@ -289,6 +293,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClick
                             }
                             var icon = BitmapDescriptorFactory.defaultMarker(color)
                             if (region === 3015)
+
                                 mMap.addMarker(
                                     MarkerOptions()
                                         .position(ofoten)
@@ -377,6 +382,21 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClick
                                         .snippet(response.body()?.get(0)?.MainText)
                                         .icon(icon)
                                 )
+                            if (region === 3018)
+                                mMap.addMarker(
+                                    MarkerOptions()
+                                        .position(helgeland)
+                                        .title("Helgeland")
+                                        .snippet(response.body()?.get(0)?.MainText)
+                                        .icon(icon)
+                                )
+                            if (region === 3017)
+                                mMap.addMarker(
+                                    MarkerOptions()
+                                        .position(svartisen)
+                                        .title("Helgeland")
+                                        .snippet(response.body()?.get(0)?.MainText)
+                                        .icon(icon))
                         }
 
 
@@ -386,9 +406,10 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClick
         }
     }
 
-    override fun onInfoWindowClick(marker: Marker) {
+    override fun onInfoWindowClick(marker: Marker ) {
         val regionNavn = marker.title as String
-        val action = MapsFragmentDirections.actionMapFragmentToStatFragment(regionNavn)
+        val regionId = etnavn
+        val action = MapsFragmentDirections.actionMapFragmentToStatFragment(regionNavn, regionId)
         view?.findNavController()?.navigate(action)
     }
 

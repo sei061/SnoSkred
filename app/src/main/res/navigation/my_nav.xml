@@ -49,5 +49,8 @@
         <argument
             android:name="regionNavn"
             app:argType="string" />
+        <argument
+            android:name="regionId"
+            app:argType="integer" />
     </fragment>
 </navigation>
