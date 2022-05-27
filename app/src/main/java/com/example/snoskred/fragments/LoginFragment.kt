@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseUser
 
 class LoginFragment : Fragment() {
 
+
     private var currentUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,8 +75,11 @@ class LoginFragment : Fragment() {
         val response = result.idpResponse
         if (result.resultCode == RESULT_OK) {
             currentUser = FirebaseAuth.getInstance().currentUser
-            findNavController().navigate(R.id.action_loginFragment_to_mapFragment)
 
+            view?.post {
+
+                findNavController().navigate(R.id.action_loginFragment_to_mapFragment)
+            }
 
         } else {
             Log.e("LoginFragment", "feil under innlogging" + response?.error?.errorCode)
