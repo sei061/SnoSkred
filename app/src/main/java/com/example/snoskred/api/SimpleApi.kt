@@ -14,4 +14,6 @@ interface SimpleApi {
         @Path("Spraknokkel") Spraknokkel: Int,
     ): Response<List<Post>>
 
+
+
 }
